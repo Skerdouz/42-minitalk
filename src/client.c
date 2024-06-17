@@ -1,5 +1,10 @@
 #include "minitalk.h"
 
+void	freedom(char **array)
+{
+
+}
+
 char	**strtobin(char *str)
 {
 	int		ascii_value;
@@ -7,29 +12,25 @@ char	**strtobin(char *str)
 
 	binary = malloc(sizeof(char *) * ft_strlen(str));
 	if (!binary)
-		exit(0);
+		return (NULL);
 	while (*str)
 	{
 		*binary = malloc(sizeof(char) * 8);
 		if (!*binary)
-		{
-			freedom(); // TODO freedom function
-			exit(0);
-		}
+			return (freedom(binary), NULL); // TODO freedom function
 		ascii_value = int(*str);
 		i = 8;
-		*binary[i--] = '\0';
-		while (i >= 0)
+		*binary[i] = '\0';
+		while (--i >= 0)
 		{
-			ascii_value /= 2;
 			if (ascii_value % 2)
 				*binary[i] = '1';
 			else
 				*binary[i] = '0';
-			i--;
+			ascii_value /= 2;
 		}
 	}
-	return (result);
+	return (binary);
 }
 
 void	send_signal(pid_t pid, char *str)
