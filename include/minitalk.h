@@ -7,7 +7,10 @@
 
 #include "libft.h"
 
-
+/*
+*	client
+*/
+void	send_signal(pid_t pid, char *str);
 /*
 *	server
 */

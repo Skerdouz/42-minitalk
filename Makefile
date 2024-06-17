@@ -6,17 +6,10 @@ LIBS		=	-Llib/libft -lft
 
 # files
 SRC_DIR		=	src/
-SRC_FILES	=	main
-
-CLIENT_DIR	=	$(SRC_DIR)client/
-CLIENT_FILES=	client
-
-SERVER_DIR	=	$(SRC_DIR)server/
-SERVER_FILES=	server
+SRC_FILES	=	main client server
 
 SRCS 	=	$(addprefix $(SRC_DIR), $(addsuffix .c, $(SRC_FILES)))
-SRCS 	+=	$(addprefix $(CLIENT_DIR), $(addsuffix .c, $(CLIENT_FILES)))
-SRCS 	+=	$(addprefix $(SERVER_DIR), $(addsuffix .c, $(SERVER_FILES)))
+
 
 OBJS	=	$(SRCS:.c=.o)
 
