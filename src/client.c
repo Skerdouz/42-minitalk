@@ -15,7 +15,7 @@ char	**strtobin(char *str)
 		return (NULL);
 	while (*str)
 	{
-		*binary = malloc(sizeof(char) * 8);
+		*binary = malloc(sizeof(char) * 9);
 		if (!*binary)
 			return (freedom(binary), NULL); // TODO freedom function
 		ascii_value = int(*str);
