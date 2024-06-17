@@ -18,8 +18,16 @@ char	**strtobin(char *str)
 		}
 		ascii_value = int(*str);
 		i = 8;
-		*binary[i] = '\0';
-		while ()
+		*binary[i--] = '\0';
+		while (i >= 0)
+		{
+			ascii_value /= 2;
+			if (ascii_value % 2)
+				*binary[i] = '1';
+			else
+				*binary[i] = '0';
+			i--;
+		}
 	}
 	return (result);
 }
