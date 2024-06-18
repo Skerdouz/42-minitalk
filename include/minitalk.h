@@ -10,10 +10,8 @@
 /*
 *	client
 */
-void	send_signal(pid_t pid, char *str);
 /*
 *	server
 */
-int	server_loop(void);
 
 #endif

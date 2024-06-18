@@ -1,31 +1,27 @@
 #include "minitalk.h"
 
-static void	sighandler(int signum)
+static void	sighandler1()
 {
-	if (signum == SIGUSR1)
-		ft_printf("Caught signal %d | SIGUSR1\n", signum);
-	else if (signum == SIGUSR2)
-		ft_printf("Caught signal %d | SIGUSR2\n", signum);
-	else
-		ft_printf("Caught unknown signal\n");
-	exit (1);
+	ft_printf("Catched signal '1'");
 }
 
-int	server_loop()
+static void	sighandler2()
+{
+	ft_printf("Catched signal '1'");
+}
+
+static int	server_loop()
 {
 	pid_t	pid;
 
 	pid = getpid();
+	if (pid <= 0)
+		exit(0);
 	ft_printf("pid: %u\n", pid);
-	signal(SIGUSR1, sighandler);
-	signal(SIGUSR2, sighandler);
-
+	signal(SIGUSR1, sighandler1);
+	signal(SIGUSR2, sighandler2);
 	while (1)
-	{
-		ft_printf("Waiting for signal..\n");
-		sleep(1);
-		kill(pid, SIGUSR2);
-	}
+		usleep(200);
 	return (0);
 }
 
