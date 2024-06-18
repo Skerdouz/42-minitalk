@@ -21,9 +21,9 @@ static void	send_signal(pid_t pid, char *str)
 					exit(1);
 		
 			}
-			usleep(10000);
+			usleep(100);
 		}
-		usleep(20000);
+		usleep(200);
 		str++;
 	}
 }

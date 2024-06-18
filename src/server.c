@@ -1,50 +1,61 @@
 #include "minitalk.h"
 
-volatile int	last_signal;
-
-static void	sighandler1(int signum)
+static unsigned char	reverse_byte(unsigned char byte)
 {
-	last_signal = signum;
-}
+	unsigned char	result;
+	int				i;
 
-static void	sighandler2(int signum)
-{
-	last_signal = signum;
-}
-
-static void	server_loop()
-{
-	pid_t		pid;
-	int			bit;
-	char		byte[9];
-
-	last_signal = 0;
-	bit = 0;
-	pid = getpid();
-	if (pid <= 0)
-		exit(0);
-	ft_printf("pid: %u\n", pid);
-	signal(SIGUSR1, sighandler1);
-	signal(SIGUSR2, sighandler2);
-	while (1)
+	result = 0;
+	i = 0;
+	while (i++ < 8)
 	{
-		pause();
-		if (last_signal == SIGUSR1)
-			byte[bit++] = '1';
-		else if (last_signal == SIGUSR2)
-			byte[bit++] = '0';
-		if (bit == 8)
-		{
-			byte[bit] = '\0';
-			char_to_stash(byte);
-			bit = 0;
-		}
+		result <<= 1;
+		result |= (byte & 1);
+		byte >>= 1;
+	}
+	return (result);
+}
+
+static void	sighandler(int signum)
+{
+	static int				bit;
+	static unsigned char	byte;
+
+	if (!bit)
+		bit = 0;
+	if (!byte)
+		byte = 0;
+	if (signum == SIGUSR1)
+		byte = (byte << 1) | 1;
+	else if (signum == SIGUSR2)
+		byte <<= 1;
+	if (++bit == 8)
+	{
+		ft_printf("%c", reverse_byte(byte));
+		bit = 0;
+		byte = 0;
 	}
 }
 
 int	main(void)
 {
-	server_loop();
+	struct sigaction	sa;
+	pid_t				pid;
+
+	pid = getpid();
+	if (pid <= 0)
+		return (1);
+	ft_printf("pid: %u\n", pid);
+	ft_memset(&sa, 0, sizeof(sa));
+	sa.sa_handler = sighandler;
+	sa.sa_flags = 0;
+	sigemptyset(&sa.sa_mask);
+	if (sigaction(SIGUSR1, &sa, NULL) == -1)
+		return (1);
+	if (sigaction(SIGUSR2, &sa, NULL) == -1)
+		return (1);
+	while (1)
+		pause();
 	return (0);
 }
 
