@@ -1,7 +1,7 @@
 CLIENT_NAME	=	client
 SERVER_NAME	=	server
 CC			=	cc
-CFLAGS		=	-Wall -Wextra -Werror
+CFLAGS		=	-Wall -Wextra -Werror -g3
 INCLUDES	=	-Iinclude -Ilib/libft/include
 LIBS		=	-Llib/libft -lft
 

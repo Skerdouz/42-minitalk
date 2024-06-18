@@ -1,65 +1,36 @@
 #include "minitalk.h"
 
-// static void	freedom(char **array)
-// {
-
-// }
-
-static char	**strtobin(char *str)
+static void	send_signal(pid_t pid, char *str)
 {
-	int		ascii_value;
-	int		i;
-	char	**binary;
+	int	bit;
 
-	binary = malloc(sizeof(char *) * ft_strlen(str));
-	if (!binary)
-		return (NULL);
+	bit = 0;
 	while (*str)
 	{
-		*binary = malloc(sizeof(char) * 9);
-		if (!*binary)
-			return (NULL); // TODO freedom function
-		ascii_value = *str;
-		i = 8;
-		*binary[i] = '\0';
-		while (--i >= 0)
+		bit = 0;
+		while (bit < 8)
 		{
-			if (ascii_value % 2)
-				*binary[i] = '1';
+			if (*str & (1 << bit++))
+			{
+				if (kill(pid, SIGUSR1) == -1)
+					exit(1);
+			}
 			else
-				*binary[i] = '0';
-			ascii_value /= 2;
+			{
+				if (kill(pid, SIGUSR2) == -1)
+					exit(1);
+		
+			}
+			usleep(10000);
 		}
-		binary++;
+		usleep(20000);
 		str++;
-	}
-	return (binary);
-}
-
-static void	send_signal(pid_t pid, char **binary)
-{
-	int	i;
-
-	i = 0;
-	while (*binary)
-	{
-		i = 0;
-		while (*binary[i])
-		{
-			if (*binary[i] == '1')
-				kill(pid, SIGUSR1);
-			else if (*binary[i] == '0')
-				kill(pid, SIGUSR2);
-			i++;
-		}
-		binary++;
 	}
 }
 
 int	main(int ac, char **av)
 {
 	pid_t	pid;
-	char	**binary;
 
 	if (--ac != 2)
 	{
@@ -72,9 +43,8 @@ int	main(int ac, char **av)
 		ft_printf("Invalid PID\n");
 		exit(0);
 	}
-	binary = strtobin(av[2]);
-	if (!binary)
+	if (!av[2])
 		return (1);
-	send_signal(pid, binary);
+	send_signal(pid, av[2]);
 	return (0);
 }
