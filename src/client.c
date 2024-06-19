@@ -1,8 +1,13 @@
 #include "minitalk.h"
 
+static void	sighandler(int signum)
+{
+	(void)signum;
+}
+
 static void	send_signal(pid_t pid, char *str)
 {
-	int	bit;
+	int					bit;
 
 	bit = 0;
 	while (*str)
@@ -19,18 +24,18 @@ static void	send_signal(pid_t pid, char *str)
 			{
 				if (kill(pid, SIGUSR2) == -1)
 					exit(1);
-		
 			}
-			usleep(100);
+			usleep(1200);
 		}
-		usleep(200);
 		str++;
 	}
 }
 
 int	main(int ac, char **av)
 {
-	pid_t	pid;
+	pid_t				pid;
+	struct sigaction	sa;
+
 
 	if (--ac != 2)
 	{
@@ -44,6 +49,11 @@ int	main(int ac, char **av)
 		exit(0);
 	}
 	if (!av[2])
+		return (1);
+	ft_memset(&sa, 0, sizeof(sa));
+	sa.sa_handler = sighandler;
+	sigemptyset(&sa.sa_mask);
+	if (sigaction(SIGUSR1, &sa, NULL) == -1)
 		return (1);
 	send_signal(pid, av[2]);
 	return (0);

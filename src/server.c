@@ -1,5 +1,14 @@
 #include "minitalk.h"
 
+t_data	g_data;
+
+void	reset_data(void)
+{
+	g_data.bit = 0;
+	g_data.byte = 0;
+	g_data.client_pid = 0;
+}
+
 static unsigned char	reverse_byte(unsigned char byte)
 {
 	unsigned char	result;
@@ -16,24 +25,27 @@ static unsigned char	reverse_byte(unsigned char byte)
 	return (result);
 }
 
-static void	sighandler(int signum)
+static void	sighandler(int signum, siginfo_t *info, void *context)
 {
-	static int				bit;
-	static unsigned char	byte;
-
-	if (!bit)
-		bit = 0;
-	if (!byte)
-		byte = 0;
-	if (signum == SIGUSR1)
-		byte = (byte << 1) | 1;
-	else if (signum == SIGUSR2)
-		byte <<= 1;
-	if (++bit == 8)
+	(void)context; /*gcc error handler*/
+	if (g_data.client_pid != info->si_pid)
 	{
-		ft_printf("%c", reverse_byte(byte));
-		bit = 0;
-		byte = 0;
+		reset_data();
+		g_data.client_pid = info->si_pid;
+	}
+	if (signum == SIGUSR1)
+		g_data.byte = (g_data.byte << 1) | 1;
+	else if (signum == SIGUSR2)
+	{
+		g_data.byte <<= 1;
+	}
+	if (++g_data.bit == 8)
+	{
+		if (is_end(g_data.byte))
+			printstash();
+		g_data.byte = reverse_byte(g_data.byte);
+		write(1, &g_data.byte, 1);
+		reset_data();
 	}
 }
 
@@ -44,18 +56,11 @@ int	main(void)
 
 	pid = getpid();
 	if (pid <= 0)
-		return (1);
+		return (ft_putstr_fd("error: invalid PID\n", 1), 1);
+	reset_data();
 	ft_printf("pid: %u\n", pid);
-	ft_memset(&sa, 0, sizeof(sa));
-	sa.sa_handler = sighandler;
-	sa.sa_flags = 0;
-	sigemptyset(&sa.sa_mask);
-	if (sigaction(SIGUSR1, &sa, NULL) == -1)
-		return (1);
-	if (sigaction(SIGUSR2, &sa, NULL) == -1)
-		return (1);
 	while (1)
-		pause();
+		usleep(1200);
 	return (0);
 }
 

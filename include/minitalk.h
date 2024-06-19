@@ -1,9 +1,10 @@
 #ifndef MINITALK_H
 # define MINITALK_H
 
-# include <unistd.h>		/* standard unix functions, like getpid()       */
-# include <sys/types.h>	/* various type definitions, like pid_t         */
-# include <signal.h>		/* signal name macros, and the kill() prototype */
+# include <unistd.h>		/* getpid() */
+# include <sys/types.h>		/* pid_t */
+# include <signal.h>		/* kill() */
+# include <stdlib.h>		/* malloc() */
 
 # include "libft.h"
 
@@ -13,5 +14,11 @@
 /*
 *	server
 */
+typedef struct s_data
+{
+	int				bit;
+	unsigned char	byte;
+	pid_t			client_pid;
+}	t_data;
 
 #endif
