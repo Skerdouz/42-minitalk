@@ -1,3 +1,7 @@
+## Build executables
+client
+server
+
 ## Editor
 .vscode/*
 *~
