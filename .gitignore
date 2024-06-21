@@ -1,3 +1,8 @@
+## Testers
+tests.sh
+test_loop.sh
+test_million.sh
+
 ## Build executables
 client
 server

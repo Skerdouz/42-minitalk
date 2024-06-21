@@ -6,7 +6,7 @@
 /*   By: lbrahins <lbrahins@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 00:35:07 by lbrahins          #+#    #+#             */
-/*   Updated: 2024/06/21 00:44:54 by lbrahins         ###   ########.fr       */
+/*   Updated: 2024/06/21 15:14:30 by lbrahins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define MINITALK_H
 
 # ifndef USLEEP_T
-#  define USLEEP_T 120
+#  define USLEEP_T 1800
 # endif
 
 # include <unistd.h>		/* getpid() */
