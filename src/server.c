@@ -6,17 +6,11 @@
 /*   By: lbrahins <lbrahins@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 00:34:49 by lbrahins          #+#    #+#             */
-/*   Updated: 2024/06/21 00:43:35 by lbrahins         ###   ########.fr       */
+/*   Updated: 2024/06/21 14:48:04 by lbrahins         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
-
-/*
-*	TODO
-*	- Add the ability to send signals to the client
-*	- Try to optimize stuff
-*/
 
 static char	*init_msg(void)
 {
@@ -60,7 +54,6 @@ static void	sighandler(int signum, siginfo_t *info, void *context)
 	static char		*msg;
 
 	(void)context;
-	(void)info;/* don't forget to remove that stuff after handling the answer to the client */
 	if (!msg)
 		msg = init_msg();
 	if (signum == SIGUSR2)
@@ -71,7 +64,13 @@ static void	sighandler(int signum, siginfo_t *info, void *context)
 		c = 0;
 		bit = 0;
 	}
-	// kill(info->si_pid, signum);
+	if (kill(info->si_pid, signum) == -1)
+	{
+		free(msg);
+		ft_putstr_fd("[ERROR] Wasn't able to send signal to client (kill error).\n", 1);
+		exit(EXIT_FAILURE);
+	}
+		
 }
 
 int	main(void)
@@ -85,7 +84,7 @@ int	main(void)
 	sigemptyset(&sig.sa_mask);
 	sig.sa_flags = SA_SIGINFO;
 	if (sigaction(SIGUSR1, &sig, NULL) == -1 || sigaction(SIGUSR2, &sig, NULL) == -1)
-		return (ft_putstr_fd("error: sigaction\n", 1), 1);
+		return (ft_putstr_fd("[ERROR] sigaction error.\n", 1), 1);
 	while (1)
 		usleep(USLEEP_T);
 	return (0);
