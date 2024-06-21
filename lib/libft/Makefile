@@ -4,6 +4,14 @@ AR =		ar rcs
 CFLAGS =	-Wall -Wextra -Werror
 INCLUDES =	-Iinclude
 
+#
+#	COLORS
+#
+RESET = \033[0m
+GREEN = \033[32;49m
+RED = \033[31;49m
+BLUE = \033[34;49m
+
 ##########	SRCS	##########
 SRC_DIR =	src/
 #
@@ -47,17 +55,27 @@ OBJS	=	$(SRCS:.c=.o)
 
 $(NAME):$(OBJS)
 	@$(AR) $(NAME) $(OBJS)
-	@echo "Libft|	compiled ✅"
+	@printf "$(GREEN)[Libft]\tLibrary \"$(NAME)\" compiled✨$(RESET)\n"
 
 all:	$(NAME)
 
 clean:
-	@rm -f $(OBJS)
-	@echo "Libft|	Cleaned ✅"
+	@files_deleted=0; \
+	for obj in $(OBJS); do \
+		if [ -f "$$obj" ]; then \
+			rm -f "$$obj"; \
+			files_deleted=1; \
+		fi; \
+	done; \
+	if [ $$files_deleted -eq 1 ]; then \
+		printf "$(RED)[Libft]\tBinary files deleted🗑️$(RESET)\n"; \
+	fi
 
 fclean:	clean
-	@rm -f $(NAME)
-	@echo "Libft|	Static library ✅"
+	@if [ -f "$(NAME)" ]; then \
+		rm -f $(NAME); \
+		printf "$(RED)[Libft]\tLibrary \"$(NAME)\" deleted🗑️$(RESET)\n"; \
+	fi
 
 re:		fclean all
 

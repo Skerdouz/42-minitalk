@@ -1,5 +1,5 @@
-CLIENT_NAME	=	client
-SERVER_NAME	=	server
+CLIENT_EXECUTABLE	=	client
+SERVER_EXECUTABLE	=	server
 CC			=	cc
 CFLAGS		=	-Wall -Wextra -Werror -g3
 INCLUDES	=	-Iinclude -Ilib/libft/include
@@ -23,9 +23,9 @@ all: comp
 
 comp: $(CLIENT_OBJS) $(SERVER_OBJS)
 	@make -C lib/libft
-	@$(CC) $(CFLAGS) $(CLIENT_OBJS) $(LIBS) -o $(CLIENT_NAME)
+	@$(CC) $(CFLAGS) $(CLIENT_OBJS) $(LIBS) -o $(CLIENT_EXECUTABLE)
 	@echo "Minitalk|	client compiled ✅"
-	@$(CC) $(CFLAGS) $(SERVER_OBJS) $(LIBS) -o $(SERVER_NAME)
+	@$(CC) $(CFLAGS) $(SERVER_OBJS) $(LIBS) -o $(SERVER_EXECUTABLE)
 	@echo "Minitalk|	server compiled ✅"
 
 clean:
@@ -36,8 +36,8 @@ clean:
 
 fclean:	clean
 	@make fclean -C lib/libft
-	@rm -f $(CLIENT_NAME)
-	@rm -f $(SERVER_NAME)
+	@rm -f $(CLIENT_EXECUTABLE)
+	@rm -f $(SERVER_EXECUTABLE)
 	@echo "Minitalk|	Executable cleaned ✅"
 
 re:		fclean all
